@@ -1,0 +1,41 @@
+<html lang="en">
+<head>
+<title>Isometric</title>
+ <link rel="stylesheet" href="isometricgraphics.css">
+
+</head>
+<body>
+
+<div class="row">
+<font size=5>
+Graphics <br>
+<canvas id="canvas1" width="640" height="360"> </canvas><p>
+</div>
+<div class="row">
+<table>
+  <tr>
+    <td>/</td>
+    <td>\</td>
+    <td>-</td>
+    <td>spacing</td>
+    <td>dotsize</td>
+  </tr>
+  <tr>
+    <td><input type="TEXT" id="slashDensity" value="50" size="10"></td>
+    <td><input type="TEXT" id="backslashDensity" value="50"  size="10"></td>
+    <td><input type="TEXT" id="dashDensity" value="50"  size="10"></td>
+    <td><input type="TEXT" id="spacing" value="8"  size="10"></td>
+    <td><input type="TEXT" id="dotsize" value="1"  size="10"></td>
+  </tr>
+</table>
+<button onclick="redraw()">Redraw</button>
+</div>
+
+
+  <script language="Javascript" type="text/javascript" src="math.min.js">
+  </script>
+  <script language="Javascript" type="text/javascript" src="isometric.js">
+  </script>
+
+</body>
+</html>

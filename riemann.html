@@ -1,0 +1,88 @@
+<html lang="en">
+<head>
+<title>Riemann Sum Calculator</title>
+ <link rel="stylesheet" href="graphing.css">
+
+
+
+
+</head>
+<body>
+
+
+<div class="row">
+<font size=5>
+Riemann Sum Calculator <br>
+<canvas id="canvas" width="640" height="360"> </canvas><p>
+f(x) = <input type="TEXT" style="font-size:25px;" id="functionString" value = "sin(x)" size="40" onchange="reDraw()">
+</font>
+</div>
+
+<div class="row" style="background-color:#999999; padding:5px">
+  <button onclick="zoom(-6.4,6.4,1,-3.6,3.6,1)">zStd</button>
+  <button onclick="zoom(-2*Math.PI, 2*Math.PI, Math.PI*.5, -2,2,1)">zTrig</button>
+  ...
+  <button onclick="zoomOneToOneX()">zSquareX</button>
+  <button onclick="zoomOneToOneY()">zSquareY</button>
+  <button onclick="zoomOut()">zOut</button>
+  <button onclick="zoomIn()">zIn</button>
+  ...
+  <button onclick="zoomOutX()">xOut</button>
+  <button onclick="zoomInX()">xIn</button>
+  ...
+  <button onclick="zoomOutY()">YOut</button>
+  <button onclick="zoomInY()">YIn</button>
+</div>
+<div class="row">
+  <div class="column">
+    <h3> Window Settings </h3>
+      <table>
+          <tr>
+              <td></td>
+              <td>min</td>
+              <td>max</td>
+              <td>tick</td>
+          </tr>
+          <tr>
+              <td>x</td>
+              <td><input type="TEXT" id="x_min" value="-8" size="10"></td>
+              <td><input type="TEXT" id="x_max" value="8"  size="10"></td>
+              <td><input type="TEXT" id="x_tick" value="1"  size="10"></td>
+          </tr>
+          <tr>
+              <td>y</td>
+              <td><input type="TEXT" id="y_min" value="-4.5"  size="10"></td>
+              <td><input type="TEXT" id="y_max" value="4.5"  size="10"></td>
+              <td><input type="TEXT" id="y_tick" value="1"  size="10"></td>
+          </tr>
+      <tr><td></td><td>
+          <button onclick="reDraw()">Update</button>
+      </td></tr>
+      </table>
+</div>
+<div class="column">
+<h3> Integration Settings </h3>
+    <table>
+      <tr><td>a = <input type="TEXT" id="avalue" value="0"  size="10" onchange="reDraw()">
+              b = <input type="TEXT" id="bvalue" value="pi"  size="10" onchange="reDraw()"></td></tr>
+      <tr><td>n = <input type="TEXT" id="nvalue" value="10"  size="10" onchange="reDraw()"><br></td></tr>
+    <tr><td>
+    <select id="xstarvalue" onchange="reDraw()">
+      <option value="0" Selected> Left Endpoint
+      <option value="50"> Midpoint
+      <option value="100"> Right Endpoint
+    </select></td></tr>
+    <tr><td><input type="checkbox" id="showRectangles" onchange="reDraw()">Draw Rectangles</td></tr>
+
+    </table>
+</div>
+</div>
+<p id="areaOutput"></p>
+
+  <script language="Javascript" type="text/javascript" src="https://www.westga.edu/~cleach/graphing/math.min.js">
+  </script>
+  <script language="Javascript" type="text/javascript" src="https://www.westga.edu/~cleach/graphing/riemann.js">
+  </script>
+
+</body>
+</html>

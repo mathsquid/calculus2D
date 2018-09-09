@@ -1,0 +1,61 @@
+<html lang="en">
+<head>
+<title>Isometric</title>
+<style>
+body {
+  background: #f0f0ff;
+}
+ #canvas {
+     margin: 20px;
+     padding: 10px;
+     background: #ffffff;
+     border: thin inset #000000;
+     width: 450px;
+     height: 450px;
+ }
+
+</style>
+
+</head>
+<body>
+<div class="row">
+<canvas id="canvas" width="450" height="450"> </canvas><p>
+</div>
+
+
+<script>
+var canvas = document.getElementById("canvas");
+var ctx = canvas.getContext("2d");
+
+var m = Math.floor(Math.random()*450);
+var n = Math.floor(Math.random()*450);
+
+setInterval(dot,1);
+
+
+
+function dot(){
+for(var i=0; i<50; i++){
+  var q = Math.random()*3;
+  if (q<1){
+    m=m/2;
+    n=n/2;
+  }
+  else if (q<2){
+    m=m/2;
+    n=(450+n)/2;
+  }
+  else{
+    m=(450+m)/2;
+    n=(450+n)/2;
+  }
+ctx.fillRect(m,n,1,1);
+
+
+}
+
+}
+
+</script>
+</body>
+</html>

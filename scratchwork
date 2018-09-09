@@ -1,0 +1,77 @@
+<p>
+<button onclick="drawAxes()">draw axes</button>
+<button onclick="drawgraph()">draw graph</button>
+<button onclick="zoomOut()">zoom out</button>
+<button onclick="zoomIn()">zoom in</button>
+<button onclick="clearTheArea()">Clear</button>
+<button onclick="moveLeft()">Left</button>
+<button onclick="moveRight()">Right</button>
+<button onclick="moveUp()">Up</button>
+<button onclick="moveDown()">Down</button>
+
+
+
+function zoomOut(){
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+  windowRange[0]*=2;
+  windowRange[1]*=2;
+  windowRange[2]*=2;
+  windowRange[3]*=2;
+  updateWindowSettingBox();
+  updateScale();
+  drawAxes();
+  drawgraph();
+}
+
+function zoomIn(){
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+  windowRange[0]/=2;
+  windowRange[1]/=2;
+  windowRange[2]/=2;
+  windowRange[3]/=2;
+  updateWindowSettingBox();
+  updateScale();
+  drawAxes();
+  drawgraph();
+}
+
+
+function moveLeft(){
+  windowRange[0]-=1;
+  windowRange[1]-=1;
+  updateWindowSettingBox();
+  clearTheArea();
+  updateScale();
+  drawAxes();
+  drawgraph();
+}
+
+function moveRight(){
+  windowRange[0]+=1;
+  windowRange[1]+=1;
+  clearTheArea();
+  updateWindowSettingBox();
+  updateScale();
+  drawAxes();
+  drawgraph();
+}
+
+function moveUp(){
+  windowRange[2]+=1;
+  windowRange[3]+=1;
+  updateWindowSettingBox();
+  clearTheArea();
+  updateScale();
+  drawAxes();
+  drawgraph();
+}
+
+function moveDown(){
+  windowRange[2]-=1;
+  windowRange[3]-=1;
+  updateWindowSettingBox();
+  clearTheArea();
+  updateScale();
+  drawAxes();
+  drawgraph();
+}
