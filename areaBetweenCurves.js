@@ -95,11 +95,6 @@ function yInvT(y){
   return (canvas.height - y)/yscale + windowRange[2];
 }
 
-function riemannRectangle(xstart, width,height){
-  ctx.strokeStyle="Red";
-  //  ctx.strokeStyle="#42d1f4";
-  ctx.strokeRect(xT(xstart), yT(0)-yscale*height, xscale*width, yscale*height);
-}
 
 function drawgraph(){
   parseAndCompile();
@@ -256,21 +251,29 @@ function updateWindowSettingBox(){
   document.getElementById("y_tick").value = ytickscale;
 
 }
+var xStar, rectWidth;
+
+function riemannRectangle(xstart, width,height){
+  ctx.strokeStyle="Red";
+  //  ctx.strokeStyle="#42d1f4";
+  ctx.strokeRect(xT(xstart), yT(g(xstart+xStar/100*rectWidth))-yscale*height, xscale*width, yscale*height);
+}
+
 
 function drawRectangles(){
   clearTheArea();
   drawAxes();
   drawgraph();
-  var a,b,n,xStar;
+  var a,b,n;
   a = math.parse(document.getElementById("avalue").value).compile().eval();
   b = math.parse(document.getElementById("bvalue").value).compile().eval();
   n = math.parse(document.getElementById("nvalue").value).compile().eval();
   xStar = parseFloat(document.getElementById("xstarvalue").value);
 
   var sum=0;
-  var rectWidth=(b-a)/n;
+  rectWidth=(b-a)/n;
   for(var i=0; i<n; i++){
-    var h = f(a+i*rectWidth + xStar/100*rectWidth);
+    var h = f(a+i*rectWidth + xStar/100*rectWidth)-g(a+i*rectWidth + xStar/100*rectWidth);
     riemannRectangle((a + i*rectWidth), rectWidth, h);
     sum += rectWidth*h;
   }
