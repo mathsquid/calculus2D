@@ -13,11 +13,15 @@ canvas.addEventListener('dblclick', function(evt) {
         recenterMouse(xInvT(mousePos.x), yInvT(mousePos.y));
       }, false);
 
+canvas.addEventListener('click', function(evt) {
+          var mousePos = getMousePos(canvas, evt);
+              drawTrajectory(xInvT(mousePos.x), yInvT(mousePos.y));
+            }, false);
+
 var xscale;
 var yscale;
 var exp;
 var deriv;
-
 
 function updateScale(){
   xscale = (canvas.width)/(windowRange[1]-windowRange[0]);
@@ -50,12 +54,13 @@ function plotSegment(m,x,y,len){
 
 }
 
-function drawVectorField(){
-  for (var a=windowRange[0]- windowRange[0]%xtickscale; a<windowRange[1]; a+=xtickscale/3){
-    for (var b=windowRange[2]- windowRange[2]%xtickscale; b<windowRange[3]; b+=ytickscale/3){
+function drawDirectionField(){
+  ctx.strokeStyle="green";
+  ctx.fillStyle="green";
+  for (var a=windowRange[0]- windowRange[0]%xtickscale; a<windowRange[1]; a+=xarrowspacing){
+    for (var b=windowRange[2]- windowRange[2]%xtickscale; b<windowRange[3]; b+=yarrowspacing){
       len = math.parse(document.getElementById("nvalue").value).compile().eval();
-      m = -a/b;
-      m=a+b;
+      m=getSlope(a,b);
       theta=math.atan(m);
       ctx.fillRect(xT(a+len*math.cos(theta))-1, yT(b+len*math.sin(theta))-1,2,2);
       ctx.beginPath();
@@ -66,15 +71,14 @@ function drawVectorField(){
   }
 }
 
-function drawTrajectory(){
-  a = math.parse(document.getElementById("avalue").value).compile().eval();
-  b = math.parse(document.getElementById("bvalue").value).compile().eval();
+function drawTrajectory(a,b){
+  // a = math.parse(document.getElementById("avalue").value).compile().eval();
+  // b = math.parse(document.getElementById("bvalue").value).compile().eval();
   ctx.beginPath();
   ctx.strokeStyle="Blue";
   ctx.moveTo(xT(a), yT(b));
   for(var loopcounter=0; a<=windowRange[1] && loopcounter<1000; loopcounter++){
-    m = -a/b;
-    m=a+b;
+    m=getSlope(a,b);
     theta=math.atan(m);
     ctx.lineTo(xT(a+len*math.cos(theta)),yT(b+len*math.sin(theta)));
     a = a+len*math.cos(theta);
@@ -82,7 +86,6 @@ function drawTrajectory(){
   }
   ctx.stroke();
   console.log(loopcounter);
-
 }
 
 
@@ -124,7 +127,7 @@ function drawAxes(){
   if (windowRange[2]<0 & windowRange[3]>0){
     var xAxisLocation= (1+windowRange[2]/(windowRange[3]-windowRange[2])) * canvas.height;
     ctx.beginPath();
-    ctx.strokeStyle="#00bb000"
+    ctx.strokeStyle="#000000"
     ctx.moveTo(0,xAxisLocation);
     ctx.lineTo(canvas.width, xAxisLocation);
     ctx.stroke();
@@ -143,7 +146,7 @@ function drawAxes(){
   if (windowRange[0]<0 & windowRange[1]>0){
     var yAxisLocation= (-windowRange[0]/(windowRange[1]-windowRange[0])) * canvas.width;
     ctx.beginPath();
-    ctx.strokeStyle="#1B1B1B"
+    ctx.strokeStyle="#000000"
     ctx.moveTo(yAxisLocation,0);
     ctx.lineTo(yAxisLocation, canvas.height);
     ctx.stroke();
@@ -179,21 +182,6 @@ function riemannRectangle(xstart, width,height){
   ctx.strokeStyle="Red";
   //  ctx.strokeStyle="#42d1f4";
   ctx.strokeRect(xT(xstart), yT(0)-yscale*height, xscale*width, yscale*height);
-}
-
-function drawgraph(){
-  ctx.strokeStyle="Green"
-  return 0;
-  parseAndCompile();
-  ctx.beginPath();
-  ctx.strokeStyle="Green"
-  for (var x=1; x<canvas.width; x++){
-    var tmpx = x/xscale + windowRange[0];
-     y = f(tmpx);
-     y = canvas.height - (y*yscale-windowRange[2]*yscale);
-    ctx.lineTo(x, y);
-    }
-  ctx.stroke();
 }
 
 function clearTheArea(){
@@ -288,14 +276,13 @@ function reDraw(){
   windowRange[3]=math.parse(document.getElementById("y_max").value).compile().eval();
   xtickscale    =math.parse(document.getElementById("x_tick").value).compile().eval();
   ytickscale    =math.parse(document.getElementById("y_tick").value).compile().eval();
-
-
+  xarrowspacing    =math.parse(document.getElementById("avalue").value).compile().eval();
+  yarrowspacing    =math.parse(document.getElementById("bvalue").value).compile().eval();
   clearTheArea();
   updateScale();
   drawAxes();
-  drawgraph();
-//  if (document.getElementById("showDF").checked) drawRectangles();
-  if (document.getElementById("showDF").checked) drawVectorField();
+  parseAndCompile();
+  drawDirectionField();
 }
 
 function zoom(xmin,xmax,xtick,ymin,ymax,ytick){
@@ -309,9 +296,8 @@ function zoom(xmin,xmax,xtick,ymin,ymax,ytick){
   clearTheArea();
   updateScale();
   drawAxes();
-  drawgraph();
+  drawDirectionField();
   // if (document.getElementById("showDF").checked) drawRectangles();
-  if (document.getElementById("showDF").checked) drawVectorField();
 
 }
 
@@ -325,37 +311,19 @@ function updateWindowSettingBox(){
 
 }
 
-function drawRectangles(){
-  clearTheArea();
-  drawAxes();
-  drawgraph();
-  var a,b,n,xStar;
-  a = math.parse(document.getElementById("avalue").value).compile().eval();
-  b = math.parse(document.getElementById("bvalue").value).compile().eval();
-  n = math.parse(document.getElementById("nvalue").value).compile().eval();
-  xStar = parseFloat(document.getElementById("xstarvalue").value);
-
-  var sum=0;
-  var rectWidth=(b-a)/n;
-  for(var i=0; i<n; i++){
-    var h = f(a+i*rectWidth + xStar/100*rectWidth);
-    riemannRectangle((a + i*rectWidth), rectWidth, h);
-    sum += rectWidth*h;
-  }
-  var note = "Integral = "+ sum.toFixed(10);
-  document.getElementById("areaOutput").innerHTML = note;
-}
 
 function parseAndCompile(){
   var ft = document.getElementById("functionString").value;
   exp = math.parse(ft).compile();
   deriv = math.derivative(ft, "x").compile();
-
-
 }
 
 function f(x) {
   return exp.eval({"x":x});
+}
+
+function getSlope(x,y){
+  return exp.eval({"x":x, "y":y});
 }
 
 function fprime(x){
